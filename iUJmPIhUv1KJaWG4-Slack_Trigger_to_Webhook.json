@@ -1,0 +1,124 @@
+{
+  "name": "Slack Trigger to Webhook",
+  "nodes": [
+    {
+      "parameters": {
+        "trigger": [
+          "message"
+        ],
+        "channelId": {
+          "__rl": true,
+          "value": "C09B78GNYCQ",
+          "mode": "list",
+          "cachedResultName": "all-vincent-test"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.slackTrigger",
+      "typeVersion": 1,
+      "position": [
+        -288,
+        -80
+      ],
+      "id": "78805943-abd0-401f-bb01-e1cfd8183630",
+      "name": "Slack Trigger",
+      "webhookId": "8a29e73a-72e9-4160-9b2c-4ff54a62e218",
+      "credentials": {
+        "slackApi": {
+          "id": "6YLYCcxzJ3ZFI9aJ",
+          "name": "Slack account vincent-testing"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://n8n-equilar.app.n8n.cloud/webhook/slack-message-processor",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        128,
+        -80
+      ],
+      "id": "706ae621-2d05-41f4-a45f-ad0488965dc5",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.text }}",
+                    "rightValue": "error(s)",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "5d8b3322-65cf-45e7-8c9e-502d9755c91e"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -80,
+        -80
+      ],
+      "id": "60e63001-e82d-47a3-aaed-61f4bf84437c",
+      "name": "Switch"
+    }
+  ],
+  "connections": {
+    "Slack Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 1,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}
